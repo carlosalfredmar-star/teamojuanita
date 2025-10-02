@@ -25,7 +25,9 @@
       transition: transform 0.5s;
       z-index: 10;
     }
-    .envelope:hover { transform: scale(1.05); }
+    .envelope:hover {
+      transform: scale(1.05);
+    }
     .letter {
       position: absolute;
       top: 0;
@@ -54,7 +56,9 @@
       color: #e6ccb2;
       transition: transform 0.3s;
     }
-    .heart-btn:hover { transform: scale(1.2); }
+    .heart-btn:hover {
+      transform: scale(1.2);
+    }
     img, video {
       max-width: 100%;
       margin: 10px 0;
@@ -64,27 +68,34 @@
       background: #fafafa;
       padding: 5px;
     }
+
+    /* contenedor de caída */
     .heart-container {
       position: fixed;
       top: -10px;
       animation: fall linear forwards;
       pointer-events: none;
     }
-    @keyframes fall { to { top: 110vh; opacity: 0; } }
+    @keyframes fall {
+      to { top: 110vh; opacity: 0; }
+    }
+
+    /* corazón interno que se mueve en zig-zag y rota */
     .heart {
       display: inline-block;
       animation: sway ease-in-out infinite, spin ease-in-out infinite;
+      transform-origin: center;
     }
     @keyframes sway {
-      0% { transform: translateX(0); }
-      25% { transform: translateX(-20px); }
-      50% { transform: translateX(20px); }
-      75% { transform: translateX(-15px); }
+      0%   { transform: translateX(0); }
+      25%  { transform: translateX(-20px); }
+      50%  { transform: translateX(20px); }
+      75%  { transform: translateX(-15px); }
       100% { transform: translateX(0); }
     }
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      50% { transform: rotate(25deg); }
+      0%   { transform: rotate(0deg); }
+      50%  { transform: rotate(25deg); }
       100% { transform: rotate(-25deg); }
     }
   </style>
@@ -101,45 +112,113 @@
       <button class="heart-btn" onclick="editar(event)">❤</button>
     </div>
   </div>
+
+  <!-- Audio: se carga dinámicamente desde localStorage 'song' o usa 'cancion.mp3' -->
+  <audio id="music" loop></audio>
+
   <script>
     let raining = false;
+    const music = document.getElementById('music');
+
+    // Al cargar la página, seteamos la fuente del audio (si existe en localStorage)
+    (function initMusic(){
+      const savedSong = localStorage.getItem('song'); // si tu editor guarda "song"
+      music.src = savedSong ? savedSong : 'cancion.mp3';
+      music.volume = 0.7; // ajusta volumen por defecto
+      music.preload = 'auto';
+    })();
+
     function openLetter() {
       const envelope = document.querySelector(".envelope");
       envelope.classList.toggle("open");
-      if (envelope.classList.contains("open") && !raining) {
-        raining = true;
-        startHearts();
+
+      if (envelope.classList.contains("open")) {
+        // iniciar corazones (solo la primera vez)
+        if (!raining) { raining = true; startHearts(); }
+
+        // reproducir musica (user gesture since click)
+        music.play().catch(()=>{ /* si el navegador evita autoplay, no rompe la página */ });
+      } else {
+        // al cerrar, pause y reinicie para que al reabrir empiece desde el inicio
+        try {
+          music.pause();
+          music.currentTime = 0;
+        } catch(e){}
       }
+
+      // cargar contenido guardado en localStorage
       if(localStorage.getItem("titulo")) document.getElementById("titulo").innerText = localStorage.getItem("titulo");
       if(localStorage.getItem("mensaje")) document.getElementById("mensaje").innerText = localStorage.getItem("mensaje");
+
       const foto = localStorage.getItem("foto");
       const video = localStorage.getItem("video");
-      if (foto) { document.getElementById("foto").src = foto; document.getElementById("foto").style.display = "block"; }
-      if (video) { document.getElementById("video").src = video; document.getElementById("video").style.display = "block"; }
+
+      if (foto) {
+        document.getElementById("foto").src = foto;
+        document.getElementById("foto").style.display = "block";
+      } else {
+        document.getElementById("foto").style.display = "none";
+      }
+      if (video) {
+        // si el video existe, actualiza la source y muestra el video
+        const vid = document.getElementById("video");
+        vid.querySelector('source').src = video;
+        vid.load();
+        vid.style.display = "block";
+      } else {
+        document.getElementById("video").style.display = "none";
+      }
     }
-    function editar(e) { e.stopPropagation(); window.location.href = "editar.html"; }
+
+    function editar(e) {
+      e.stopPropagation();
+      window.location.href = "editar.html";
+    }
+
+    // corazones con caída fluida (contenedor + elemento interno)
     function startHearts() {
       const colors = ["#e6ccb2", "#6c757d", "#7b3f00", "#800020"]; 
+      const spawnInterval = 300; // ms entre corazones
+
       setInterval(() => {
         const container = document.createElement("div");
         container.classList.add("heart-container");
+
         const heart = document.createElement("div");
         heart.classList.add("heart");
         heart.innerText = "❤";
         heart.style.color = colors[Math.floor(Math.random() * colors.length)];
-        heart.style.fontSize = (20 + Math.random() * 20) + "px";
-        const fallTime = 5 + Math.random() * 4;
-        const swayTime = 2 + Math.random() * 2;
-        const spinTime = 3 + Math.random() * 3;
+        heart.style.fontSize = (18 + Math.random() * 26) + "px";
+
+        // duraciones aleatorias
+        const fallTime = 5 + Math.random() * 4;   // tiempo de caída
+        const swayTime = 2 + Math.random() * 2;   // tiempo zig-zag
+        const spinTime = 3 + Math.random() * 3;   // tiempo rotación
+
         container.style.left = Math.random() * 100 + "vw";
         container.style.animationDuration = fallTime + "s";
         heart.style.animationDuration = `${swayTime}s, ${spinTime}s`;
+        heart.style.transform = `rotate(${Math.random() * 60 - 30}deg)`; // inclinación inicial
+
+        // z-index aleatorio para profundidad (atrás o delante de la carta)
         container.style.zIndex = Math.random() > 0.5 ? "5" : "25";
+
         container.appendChild(heart);
         document.body.appendChild(container);
-        setTimeout(() => container.remove(), (fallTime+1)*1000);
-      }, 300);
+
+        // limpiar después de caída
+        setTimeout(() => container.remove(), (fallTime + 0.5) * 1000);
+      }, spawnInterval);
     }
+
+    // Si en algún momento el usuario cambia la canción desde otro lugar (editor),
+    // podemos actualizar la fuente en memoria: escucha storage events (si el editor actualiza localStorage)
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'song') {
+        music.src = e.newValue ? e.newValue : 'cancion.mp3';
+        music.load();
+      }
+    });
   </script>
 </body>
 </html>
