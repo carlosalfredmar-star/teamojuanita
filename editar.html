@@ -3,28 +3,79 @@
 <head>
   <meta charset="UTF-8">
   <title>Editar Carta</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    input, textarea {
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      width: 100%;
+    }
+    button {
+      background: #d4a373;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      color: white;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #b5835a;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 5px;
+    }
+  </style>
 </head>
-<body style="font-family: Arial, sans-serif; background:#f5f5f5; padding:20px;">
-  <h2>Editar contenido de la carta</h2>
+<body>
   <form onsubmit="guardar(event)">
-    <label>Título:</label><br>
-    <input type="text" id="titulo" style="width:100%; margin-bottom:10px;"><br>
-    <label>Mensaje:</label><br>
-    <textarea id="mensaje" style="width:100%; height:100px; margin-bottom:10px;"></textarea><br>
-    <label>Foto (URL):</label><br>
-    <input type="text" id="foto" style="width:100%; margin-bottom:10px;"><br>
-    <label>Video (URL):</label><br>
-    <input type="text" id="video" style="width:100%; margin-bottom:10px;"><br>
+    <label for="titulo">Título:</label>
+    <input type="text" id="titulo" placeholder="Ej: Para mi amor">
+
+    <label for="mensaje">Mensaje:</label>
+    <textarea id="mensaje" rows="4" placeholder="Escribe tu mensaje"></textarea>
+
+    <label for="foto">Foto (URL):</label>
+    <input type="text" id="foto" placeholder="Ej: foto.jpg">
+
+    <label for="video">Video (URL):</label>
+    <input type="text" id="video" placeholder="Ej: video.mp4">
+
+    <label for="song">Música (URL o nombre de archivo .mp3):</label>
+    <input type="text" id="song" placeholder="Ej: cancion.mp3">
+
     <button type="submit">Guardar</button>
   </form>
+
   <script>
-    function guardar(e){
+    function guardar(e) {
       e.preventDefault();
       localStorage.setItem("titulo", document.getElementById("titulo").value);
       localStorage.setItem("mensaje", document.getElementById("mensaje").value);
       localStorage.setItem("foto", document.getElementById("foto").value);
       localStorage.setItem("video", document.getElementById("video").value);
-      alert("Guardado con éxito! Ahora abre la carta para ver los cambios.");
+      localStorage.setItem("song", document.getElementById("song").value);
+      alert("¡Datos guardados con éxito! 🎉");
       window.location.href = "index.html";
     }
   </script>
