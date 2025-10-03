@@ -29,19 +29,19 @@
       align-items: center;
       color: white;
       font-weight: bold;
-      font-size: 22px;
+      font-size: 20px;
     }
     .envelope.open {
-      transform: translateY(-300px);
+      transform: translateY(-250px);
     }
     .letter {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 360px;
+      width: 320px;
       background: white;
-      padding: 20px;
+      padding: 15px;
       border-radius: 10px;
       text-align: center;
       opacity: 0;
@@ -52,14 +52,29 @@
     .envelope.open + .letter {
       opacity: 1;
     }
-    img, video {
-      max-width: 100%;
-      margin: 10px 0;
+    h2 { margin: 0; }
+    p { margin: 10px 0; }
+    .photo {
+      position: absolute;
+      width: 100px;
+      height: auto;
       border: 4px solid #fff;
       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      transform: rotate(-2deg);
       background: #fafafa;
       padding: 5px;
+      transform: rotate(0deg);
+    }
+    .video-box {
+      width: 220px;
+      margin: 15px auto 10px;
+      border: 4px solid #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      background: #fafafa;
+      padding: 5px;
+    }
+    video {
+      width: 100%;
+      display: block;
     }
     .heart-btn {
       margin-top: 15px;
@@ -108,14 +123,18 @@
     <h2 id="titulo">💌 Para ti 💌</h2>
     <p id="mensaje">Este es nuestro primer mes juntos, gracias por hacerme tan feliz ❤️</p>
 
-    <img id="foto1" src="" alt="Foto 1" style="display:none;">
-    <img id="foto2" src="" alt="Foto 2" style="display:none;">
-    <img id="foto3" src="" alt="Foto 3" style="display:none;">
-    <img id="foto4" src="" alt="Foto 4" style="display:none;">
+    <!-- Fotos estilo desordenadas -->
+    <img id="foto1" class="photo" style="top:60px; left:20px; transform:rotate(-8deg); display:none;">
+    <img id="foto2" class="photo" style="top:90px; right:20px; transform:rotate(5deg); display:none;">
+    <img id="foto3" class="photo" style="bottom:40px; left:60px; transform:rotate(12deg); display:none;">
+    <img id="foto4" class="photo" style="bottom:60px; right:60px; transform:rotate(-10deg); display:none;">
 
-    <video id="video" controls style="display:none;">
-      <source src="" type="video/mp4">
-    </video>
+    <!-- Video más grande -->
+    <div class="video-box" id="videoBox" style="display:none;">
+      <video id="video" controls>
+        <source src="" type="video/mp4">
+      </video>
+    </div>
 
     <button class="heart-btn" onclick="editar(event)">❤</button>
   </div>
@@ -163,12 +182,11 @@
 
       const video = localStorage.getItem("video");
       if (video) {
-        const vid = document.getElementById("video");
-        vid.querySelector('source').src = video;
-        vid.load();
-        vid.style.display = "block";
+        document.getElementById("video").querySelector('source').src = video;
+        document.getElementById("video").load();
+        document.getElementById("videoBox").style.display = "block";
       } else {
-        document.getElementById("video").style.display = "none";
+        document.getElementById("videoBox").style.display = "none";
       }
     }
 
@@ -216,3 +234,4 @@
   </script>
 </body>
 </html>
+
