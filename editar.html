@@ -17,7 +17,7 @@
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-      width: 320px;
+      width: 300px;
       display: flex;
       flex-direction: column;
       gap: 15px;
@@ -50,28 +50,19 @@
 <body>
   <form onsubmit="guardar(event)">
     <label for="titulo">Título:</label>
-    <input type="text" id="titulo">
+    <input type="text" id="titulo" placeholder="Ej: Para mi amor">
 
     <label for="mensaje">Mensaje:</label>
-    <textarea id="mensaje" rows="4"></textarea>
+    <textarea id="mensaje" rows="4" placeholder="Escribe tu mensaje"></textarea>
 
-    <label for="foto1">Foto 1 (URL):</label>
-    <input type="text" id="foto1">
-
-    <label for="foto2">Foto 2 (URL):</label>
-    <input type="text" id="foto2">
-
-    <label for="foto3">Foto 3 (URL):</label>
-    <input type="text" id="foto3">
-
-    <label for="foto4">Foto 4 (URL):</label>
-    <input type="text" id="foto4">
+    <label for="foto">Foto (URL):</label>
+    <input type="text" id="foto" placeholder="Ej: foto.jpg">
 
     <label for="video">Video (URL):</label>
-    <input type="text" id="video">
+    <input type="text" id="video" placeholder="Ej: video.mp4">
 
-    <label for="song">Música (URL o archivo .mp3):</label>
-    <input type="text" id="song">
+    <label for="song">Música (URL o nombre de archivo .mp3):</label>
+    <input type="text" id="song" placeholder="Ej: cancion.mp3">
 
     <button type="submit">Guardar</button>
   </form>
@@ -81,9 +72,7 @@
       e.preventDefault();
       localStorage.setItem("titulo", document.getElementById("titulo").value);
       localStorage.setItem("mensaje", document.getElementById("mensaje").value);
-      for (let i=1; i<=4; i++) {
-        localStorage.setItem("foto"+i, document.getElementById("foto"+i).value);
-      }
+      localStorage.setItem("foto", document.getElementById("foto").value);
       localStorage.setItem("video", document.getElementById("video").value);
       localStorage.setItem("song", document.getElementById("song").value);
       alert("¡Datos guardados con éxito! 🎉");
