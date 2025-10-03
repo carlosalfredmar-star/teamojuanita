@@ -17,47 +17,40 @@
     .envelope {
       position: relative;
       width: 400px;
-      height: 400px;
+      height: 280px;
       background: #d4a373;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
       cursor: pointer;
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-      transition: transform 0.5s;
+      transition: transform 1s ease;
       z-index: 10;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-weight: bold;
+      font-size: 22px;
     }
-    .envelope:hover {
-      transform: scale(1.05);
+    .envelope.open {
+      transform: translateY(-300px);
     }
     .letter {
       position: absolute;
-      top: 0;
+      top: 50%;
       left: 50%;
-      transform: translateX(-50%) translateY(-100%);
+      transform: translate(-50%, -50%);
       width: 360px;
       background: white;
       padding: 20px;
       border-radius: 10px;
       text-align: center;
       opacity: 0;
-      transition: all 1s;
+      transition: opacity 1s ease;
       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
       z-index: 20;
     }
-    .envelope.open .letter {
-      transform: translateX(-50%) translateY(-320px);
+    .envelope.open + .letter {
       opacity: 1;
-    }
-    .heart-btn {
-      margin-top: 15px;
-      font-size: 30px;
-      cursor: pointer;
-      border: none;
-      background: none;
-      color: #e6ccb2;
-      transition: transform 0.3s;
-    }
-    .heart-btn:hover {
-      transform: scale(1.2);
     }
     img, video {
       max-width: 100%;
@@ -67,6 +60,18 @@
       transform: rotate(-2deg);
       background: #fafafa;
       padding: 5px;
+    }
+    .heart-btn {
+      margin-top: 15px;
+      font-size: 30px;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: #d4a373;
+      transition: transform 0.3s;
+    }
+    .heart-btn:hover {
+      transform: scale(1.2);
     }
     .heart-container {
       position: fixed;
@@ -97,23 +102,22 @@
   </style>
 </head>
 <body>
-  <div class="envelope" onclick="openLetter()">
-    <div class="letter" id="letter">
-      <h2 id="titulo">💌 Para ti 💌</h2>
-      <p id="mensaje">Este es nuestro primer mes juntos, gracias por hacerme tan feliz ❤️</p>
-      
-      <!-- Hasta 4 fotos -->
-      <img id="foto1" src="" alt="Foto 1" style="display:none;">
-      <img id="foto2" src="" alt="Foto 2" style="display:none;">
-      <img id="foto3" src="" alt="Foto 3" style="display:none;">
-      <img id="foto4" src="" alt="Foto 4" style="display:none;">
+  <div class="envelope" onclick="openLetter()">💌 Haz clic aquí</div>
 
-      <video id="video" controls style="display:none;">
-        <source src="" type="video/mp4">
-      </video>
+  <div class="letter" id="letter">
+    <h2 id="titulo">💌 Para ti 💌</h2>
+    <p id="mensaje">Este es nuestro primer mes juntos, gracias por hacerme tan feliz ❤️</p>
 
-      <button class="heart-btn" onclick="editar(event)">❤</button>
-    </div>
+    <img id="foto1" src="" alt="Foto 1" style="display:none;">
+    <img id="foto2" src="" alt="Foto 2" style="display:none;">
+    <img id="foto3" src="" alt="Foto 3" style="display:none;">
+    <img id="foto4" src="" alt="Foto 4" style="display:none;">
+
+    <video id="video" controls style="display:none;">
+      <source src="" type="video/mp4">
+    </video>
+
+    <button class="heart-btn" onclick="editar(event)">❤</button>
   </div>
 
   <audio id="music" loop></audio>
@@ -121,6 +125,7 @@
   <script>
     let raining = false;
     const music = document.getElementById('music');
+    const envelope = document.querySelector(".envelope");
 
     (function initMusic(){
       const savedSong = localStorage.getItem('song');
@@ -130,7 +135,6 @@
     })();
 
     function openLetter() {
-      const envelope = document.querySelector(".envelope");
       envelope.classList.toggle("open");
 
       if (envelope.classList.contains("open")) {
@@ -146,7 +150,6 @@
       if(localStorage.getItem("titulo")) document.getElementById("titulo").innerText = localStorage.getItem("titulo");
       if(localStorage.getItem("mensaje")) document.getElementById("mensaje").innerText = localStorage.getItem("mensaje");
 
-      // Cargar hasta 4 fotos
       for (let i=1; i<=4; i++) {
         const foto = localStorage.getItem("foto"+i);
         const img = document.getElementById("foto"+i);
@@ -213,4 +216,3 @@
   </script>
 </body>
 </html>
-
