@@ -2,215 +2,83 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Carta Especial</title>
+  <title>Editar Carta</title>
   <style>
     body {
-      margin: 0;
-      font-family: 'Arial', sans-serif;
+      font-family: Arial, sans-serif;
       background: #f5f5f5;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      overflow: hidden;
     }
-    .envelope {
-      position: relative;
-      width: 500px;
-      height: 300px;
-      background: #d4a373;
-      cursor: pointer;
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-      transition: transform 0.5s;
-      z-index: 10;
-    }
-    .envelope:hover {
-      transform: scale(1.05);
-    }
-    .letter {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%) translateY(-100%);
-      width: 260px;
+    form {
       background: white;
       padding: 20px;
       border-radius: 10px;
-      text-align: center;
-      opacity: 0;
-      transition: all 1s;
       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-      z-index: 20;
+      width: 320px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
     }
-    .envelope.open .letter {
-      transform: translateX(-50%) translateY(-220px);
-      opacity: 1;
-    }
-    .heart-btn {
-      margin-top: 15px;
-      font-size: 30px;
-      cursor: pointer;
-      border: none;
-      background: none;
-      color: #e6ccb2;
-      transition: transform 0.3s;
-    }
-    .heart-btn:hover {
-      transform: scale(1.2);
-    }
-    .polaroid {
-      display: inline-block;
-      background: #fff;
-      padding: 10px 10px 20px 10px;
-      margin: 10px 0;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    input, textarea {
+      padding: 10px;
+      border-radius: 5px;
       border: 1px solid #ccc;
-      transform: rotate(-2deg);
+      width: 100%;
     }
-    .polaroid img {
-      max-width: 100%;
-      display: block;
+    button {
+      background: #d4a373;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      color: white;
+      transition: 0.3s;
     }
-    video {
-      max-width: 100%;
-      margin: 10px 0;
-      border: 4px solid #fff;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      background: #fafafa;
-      padding: 5px;
+    button:hover {
+      background: #b5835a;
     }
-    .heart-container {
-      position: fixed;
-      top: -10px;
-      animation: fall linear forwards;
-      pointer-events: none;
-    }
-    @keyframes fall {
-      to { top: 110vh; opacity: 0; }
-    }
-    .heart {
-      display: inline-block;
-      animation: sway ease-in-out infinite, spin ease-in-out infinite;
-      transform-origin: center;
-    }
-    @keyframes sway {
-      0%   { transform: translateX(0); }
-      25%  { transform: translateX(-20px); }
-      50%  { transform: translateX(20px); }
-      75%  { transform: translateX(-15px); }
-      100% { transform: translateX(0); }
-    }
-    @keyframes spin {
-      0%   { transform: rotate(0deg); }
-      50%  { transform: rotate(25deg); }
-      100% { transform: rotate(-25deg); }
+    label {
+      font-weight: bold;
+      margin-top: 5px;
     }
   </style>
 </head>
 <body>
-  <div class="envelope" onclick="openLetter()">
-    <div class="letter" id="letter">
-      <h2 id="titulo">💌 Para ti 💌</h2>
-      <p id="mensaje">Este es nuestro primer mes juntos, gracias por hacerme tan feliz ❤️</p>
-      <div id="fotos"></div>
-      <video id="video" controls style="display:none;">
-        <source src="video.mp4" type="video/mp4">
-      </video>
-      <button class="heart-btn" onclick="editar(event)">❤</button>
-    </div>
-  </div>
+  <form onsubmit="guardar(event)">
+    <label for="titulo">Título:</label>
+    <input type="text" id="titulo" placeholder="Ej: Para mi amor">
 
-  <audio id="music" loop></audio>
+    <label for="mensaje">Mensaje:</label>
+    <textarea id="mensaje" rows="4" placeholder="Escribe tu mensaje"></textarea>
+
+    <label for="fotos">Fotos (URLs separadas por coma):</label>
+    <input type="text" id="fotos" placeholder="Ej: foto1.jpg,foto2.jpg">
+
+    <label for="video">Video (URL):</label>
+    <input type="text" id="video" placeholder="Ej: video.mp4">
+
+    <label for="song">Música (URL o archivo .mp3):</label>
+    <input type="text" id="song" placeholder="Ej: cancion.mp3">
+
+    <button type="submit">Guardar</button>
+  </form>
 
   <script>
-    let raining = false;
-    const music = document.getElementById('music');
-
-    (function initMusic(){
-      const savedSong = localStorage.getItem('song');
-      music.src = savedSong ? savedSong : 'cancion.mp3';
-      music.volume = 0.7;
-      music.preload = 'auto';
-    })();
-
-    function openLetter() {
-      const envelope = document.querySelector(".envelope");
-      envelope.classList.toggle("open");
-
-      if (envelope.classList.contains("open")) {
-        if (!raining) { raining = true; startHearts(); }
-        music.play().catch(()=>{});
-      } else {
-        try {
-          music.pause();
-          music.currentTime = 0;
-        } catch(e){}
-      }
-
-      if(localStorage.getItem("titulo")) document.getElementById("titulo").innerText = localStorage.getItem("titulo");
-      if(localStorage.getItem("mensaje")) document.getElementById("mensaje").innerText = localStorage.getItem("mensaje");
-
-      // Fotos múltiples
-      const fotosDiv = document.getElementById("fotos");
-      fotosDiv.innerHTML = "";
-      const fotos = JSON.parse(localStorage.getItem("fotos") || "[]");
-      fotos.forEach(url => {
-        const wrapper = document.createElement("div");
-        wrapper.classList.add("polaroid");
-        const img = document.createElement("img");
-        img.src = url.trim();
-        wrapper.appendChild(img);
-        fotosDiv.appendChild(wrapper);
-      });
-
-      const video = localStorage.getItem("video");
-      if (video) {
-        const vid = document.getElementById("video");
-        vid.querySelector('source').src = video;
-        vid.load();
-        vid.style.display = "block";
-      } else {
-        document.getElementById("video").style.display = "none";
-      }
+    function guardar(e) {
+      e.preventDefault();
+      localStorage.setItem("titulo", document.getElementById("titulo").value);
+      localStorage.setItem("mensaje", document.getElementById("mensaje").value);
+      const fotos = document.getElementById("fotos").value.split(",");
+      localStorage.setItem("fotos", JSON.stringify(fotos));
+      localStorage.setItem("video", document.getElementById("video").value);
+      localStorage.setItem("song", document.getElementById("song").value);
+      alert("¡Datos guardados con éxito! 🎉");
+      window.location.href = "index.html";
     }
-
-    function editar(e) {
-      e.stopPropagation();
-      window.location.href = "editar.html";
-    }
-
-    function startHearts() {
-      const colors = ["#e6ccb2", "#6c757d", "#7b3f00", "#800020"];
-      const spawnInterval = 300;
-      setInterval(() => {
-        const container = document.createElement("div");
-        container.classList.add("heart-container");
-        const heart = document.createElement("div");
-        heart.classList.add("heart");
-        heart.innerText = "❤";
-        heart.style.color = colors[Math.floor(Math.random() * colors.length)];
-        heart.style.fontSize = (18 + Math.random() * 26) + "px";
-        const fallTime = 5 + Math.random() * 4;
-        const swayTime = 2 + Math.random() * 2;
-        const spinTime = 3 + Math.random() * 3;
-        container.style.left = Math.random() * 100 + "vw";
-        container.style.animationDuration = fallTime + "s";
-        heart.style.animationDuration = `${swayTime}s, ${spinTime}s`;
-        heart.style.transform = `rotate(${Math.random() * 60 - 30}deg)`;
-        container.style.zIndex = Math.random() > 0.5 ? "5" : "25";
-        container.appendChild(heart);
-        document.body.appendChild(container);
-        setTimeout(() => container.remove(), (fallTime + 0.5) * 1000);
-      }, spawnInterval);
-    }
-
-    window.addEventListener('storage', (e) => {
-      if (e.key === 'song') {
-        music.src = e.newValue ? e.newValue : 'cancion.mp3';
-        music.load();
-      }
-    });
   </script>
 </body>
 </html>
