@@ -17,7 +17,7 @@
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-      width: 300px;
+      width: 320px;
       display: flex;
       flex-direction: column;
       gap: 15px;
@@ -55,14 +55,11 @@
     <label for="mensaje">Mensaje:</label>
     <textarea id="mensaje" rows="4" placeholder="Escribe tu mensaje"></textarea>
 
-    <label for="foto">Foto (URL):</label>
-    <input type="text" id="foto" placeholder="Ej: foto.jpg">
-
-    <label for="foto">Foto (URL):</label>
-    <input type="text" id="foto" placeholder="Ej: foto.jpg">
-
-    <label for="foto">Foto (URL):</label>
-    <input type="text" id="foto" placeholder="Ej: foto.jpg">
+    <label>Fotos (URLs):</label>
+    <input type="text" id="foto1" placeholder="Foto 1">
+    <input type="text" id="foto2" placeholder="Foto 2">
+    <input type="text" id="foto3" placeholder="Foto 3">
+    <input type="text" id="foto4" placeholder="Foto 4">
 
     <label for="video">Video (URL):</label>
     <input type="text" id="video" placeholder="Ej: video.mp4">
@@ -78,7 +75,9 @@
       e.preventDefault();
       localStorage.setItem("titulo", document.getElementById("titulo").value);
       localStorage.setItem("mensaje", document.getElementById("mensaje").value);
-      localStorage.setItem("foto", document.getElementById("foto").value);
+      for (let i=1; i<=4; i++) {
+        localStorage.setItem("foto"+i, document.getElementById("foto"+i).value);
+      }
       localStorage.setItem("video", document.getElementById("video").value);
       localStorage.setItem("song", document.getElementById("song").value);
       alert("¡Datos guardados con éxito! 🎉");
