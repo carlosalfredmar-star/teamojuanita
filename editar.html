@@ -20,10 +20,10 @@
       width: 320px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 15px;
     }
     input, textarea {
-      padding: 8px;
+      padding: 10px;
       border-radius: 5px;
       border: 1px solid #ccc;
       width: 100%;
@@ -50,28 +50,28 @@
 <body>
   <form onsubmit="guardar(event)">
     <label for="titulo">Título:</label>
-    <input type="text" id="titulo" placeholder="Ej: Para mi amor">
+    <input type="text" id="titulo">
 
     <label for="mensaje">Mensaje:</label>
-    <textarea id="mensaje" rows="4" placeholder="Escribe tu mensaje"></textarea>
+    <textarea id="mensaje" rows="4"></textarea>
 
     <label for="foto1">Foto 1 (URL):</label>
-    <input type="text" id="foto1" placeholder="Ej: foto1.jpg">
+    <input type="text" id="foto1">
 
     <label for="foto2">Foto 2 (URL):</label>
-    <input type="text" id="foto2" placeholder="Ej: foto2.jpg">
+    <input type="text" id="foto2">
 
     <label for="foto3">Foto 3 (URL):</label>
-    <input type="text" id="foto3" placeholder="Ej: foto3.jpg">
+    <input type="text" id="foto3">
 
     <label for="foto4">Foto 4 (URL):</label>
-    <input type="text" id="foto4" placeholder="Ej: foto4.jpg">
+    <input type="text" id="foto4">
 
     <label for="video">Video (URL):</label>
-    <input type="text" id="video" placeholder="Ej: video.mp4">
+    <input type="text" id="video">
 
-    <label for="song">Música (URL o nombre de archivo .mp3):</label>
-    <input type="text" id="song" placeholder="Ej: cancion.mp3">
+    <label for="song">Música (URL o archivo .mp3):</label>
+    <input type="text" id="song">
 
     <button type="submit">Guardar</button>
   </form>
@@ -81,14 +81,11 @@
       e.preventDefault();
       localStorage.setItem("titulo", document.getElementById("titulo").value);
       localStorage.setItem("mensaje", document.getElementById("mensaje").value);
-
       for (let i=1; i<=4; i++) {
         localStorage.setItem("foto"+i, document.getElementById("foto"+i).value);
       }
-
       localStorage.setItem("video", document.getElementById("video").value);
       localStorage.setItem("song", document.getElementById("song").value);
-
       alert("¡Datos guardados con éxito! 🎉");
       window.location.href = "index.html";
     }
