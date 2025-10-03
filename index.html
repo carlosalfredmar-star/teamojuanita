@@ -16,8 +16,8 @@
     }
     .envelope {
       position: relative;
-      width: 500px;
-      height: 300px;
+      width: 300px;
+      height: 200px;
       background: #d4a373;
       cursor: pointer;
       border-radius: 10px;
@@ -33,7 +33,8 @@
       top: 0;
       left: 50%;
       transform: translateX(-50%) translateY(-100%);
-      width: 260px;
+      width: 280px;
+      max-height: 300px; /* Límite de altura */
       background: white;
       padding: 20px;
       border-radius: 10px;
@@ -42,6 +43,7 @@
       transition: all 1s;
       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
       z-index: 20;
+      overflow-y: auto; /* Scroll vertical */
     }
     .envelope.open .letter {
       transform: translateX(-50%) translateY(-220px);
@@ -59,18 +61,29 @@
     .heart-btn:hover {
       transform: scale(1.2);
     }
+    /* Fotos tipo Polaroid desorganizadas */
+    #fotos {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 10px;
+    }
     .polaroid {
-      display: inline-block;
       background: #fff;
-      padding: 10px 10px 20px 10px;
-      margin: 10px 0;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      padding: 8px 8px 20px 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
       border: 1px solid #ccc;
-      transform: rotate(-2deg);
+      max-width: 100px;
+      transition: transform 0.3s;
     }
     .polaroid img {
       max-width: 100%;
       display: block;
+    }
+    .polaroid:hover {
+      transform: scale(1.1) rotate(0deg);
+      z-index: 30;
     }
     video {
       max-width: 100%;
@@ -151,13 +164,14 @@
       if(localStorage.getItem("titulo")) document.getElementById("titulo").innerText = localStorage.getItem("titulo");
       if(localStorage.getItem("mensaje")) document.getElementById("mensaje").innerText = localStorage.getItem("mensaje");
 
-      // Fotos múltiples
+      // Fotos múltiples y desorganizadas
       const fotosDiv = document.getElementById("fotos");
       fotosDiv.innerHTML = "";
       const fotos = JSON.parse(localStorage.getItem("fotos") || "[]");
       fotos.forEach(url => {
         const wrapper = document.createElement("div");
         wrapper.classList.add("polaroid");
+        wrapper.style.transform = `rotate(${Math.random()*20 - 10}deg)`; // Rotación aleatoria
         const img = document.createElement("img");
         img.src = url.trim();
         wrapper.appendChild(img);
